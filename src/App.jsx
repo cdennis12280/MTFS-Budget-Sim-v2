@@ -69,8 +69,15 @@ const formatNumber = (value) =>
   new Intl.NumberFormat("en-GB").format(Number.isFinite(value) ? value : 0);
 const parseNumber = (value) =>
   Number(String(value).replace(/,/g, "").trim() || 0);
+const gateKey = "mtfs_access_granted_v1";
+const accessPassword = "MTFSmagic";
 
 export default function App() {
+  const [accessGranted, setAccessGranted] = useState(
+    () => localStorage.getItem(gateKey) === "true"
+  );
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [scenario, setScenario] = useState("Base");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tab, setTab] = useState("Dashboard");
@@ -427,6 +434,58 @@ export default function App() {
       return null;
     }
   })();
+
+  const submitPassword = (event) => {
+    event.preventDefault();
+    if (passwordInput === accessPassword) {
+      localStorage.setItem(gateKey, "true");
+      setAccessGranted(true);
+      setPasswordError("");
+      setPasswordInput("");
+      return;
+    }
+    setPasswordError("Incorrect password. Please try again.");
+  };
+
+  if (!accessGranted) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100">
+        <div className="grid-bg min-h-screen">
+          <div className="mx-auto flex min-h-screen w-full max-w-md items-center px-6">
+            <div className="glass-panel w-full rounded-3xl p-8">
+              <h1 className="text-xl font-semibold text-white">MTFS Secure Access</h1>
+              <p className="mt-2 text-sm text-slate-400">
+                Enter the access password to open the simulator.
+              </p>
+              <form onSubmit={submitPassword} className="mt-6 space-y-4">
+                <input
+                  type="password"
+                  value={passwordInput}
+                  onChange={(event) => setPasswordInput(event.target.value)}
+                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-100"
+                  placeholder="Password"
+                  aria-label="Access password"
+                />
+                {passwordError ? (
+                  <p className="text-xs text-rose-300">{passwordError}</p>
+                ) : null}
+                <button
+                  type="submit"
+                  className="w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+                >
+                  Enter
+                </button>
+              </form>
+              <p className="mt-4 text-xs text-slate-500">
+                This gate is a lightweight client-side lock for convenience, not a
+                security boundary.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 print:bg-white print:text-slate-900">
