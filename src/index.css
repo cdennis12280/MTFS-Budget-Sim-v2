@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.glass-panel {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(16px);
+}
+
+.grid-bg {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.2) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.print-meta {
+  display: none;
+}
+
+@media print {
+  body {
+    background: white;
+    color: #0f172a;
+  }
+
+  .grid-bg {
+    background-image: none;
+  }
+
+  .glass-panel {
+    background: white;
+    border: 1px solid #cbd5f5;
+    box-shadow: none;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-meta {
+    display: block;
+    border: 1px solid #cbd5f5;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+}
